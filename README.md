@@ -82,6 +82,7 @@ This is what the request for a transaction will look like. It’s what the user 
 ### Tech Stack used
 
 - `Flask` - A HTTP Gateway to expose our blockchain structure externally.
+- `Requests` - A medium to check the HTTP Endpoint request and return JSON response.
 
 ### TODOs Planned:
 
