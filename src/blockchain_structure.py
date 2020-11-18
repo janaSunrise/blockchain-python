@@ -24,6 +24,26 @@ This is the core idea behind Proof of Work.
 Let’s decide that the hash of some integer x multiplied by another y must end in 0. 
 So, `hash(x * y) = ac23dc...0` And for this simplified example, let’s fix `x = 5`. 
 Implementing this in Python:
+```py
+from hashlib import sha256
+x = 5
+y = 0  # We don't know what y should be yet...
+while sha256(f'{x*y}'.encode()).hexdigest()[-1] != "0":
+    y += 1
+print(f'The solution is y = {y}')
+```
+The solution here is `y = 21`. Since, the produced hash ends in `0`:
+```py
+hash(5 * 21) = 1253e9373e...5e3600155e860
+```
+
+In Bitcoin, the Proof of Work algorithm is called Hashcash. 
+And it’s not too different from our basic example above. 
+It’s the algorithm that miners race to solve in order to create a new block. 
+In general, the difficulty is determined by the number of characters searched for in a string. 
+The miners are then rewarded for their solution by receiving a coin—in a transaction.
+
+The network is able to easily verify their solution.
 """
 
 # Dummy blockchain structure:
