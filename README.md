@@ -67,12 +67,21 @@ The miners are then rewarded for their solution by receiving a coin—in a trans
 
 The network is able to easily verify their solution.
 
+This is what the request for a transaction will look like. It’s what the user sends to the server:
+```json
+{
+ "sender": "my address",
+ "recipient": "someone else's address",
+ "amount": 5
+}
+```
+
 
 ## More Project Info
 
 ### Tech Stack used
 
-- `Flask`
+- `Flask` - A HTTP Gateway to expose our blockchain structure externally.
 
 ### TODOs Planned:
 
