@@ -12,6 +12,14 @@ Creating new Blocks
 When our Blockchain is instantiated we’ll need to seed it with a genesis block—a block with 
 no predecessors. We’ll also need to add a “proof” to our genesis block which is the result of 
 mining (or proof of work).
+
+Understanding Proof of Work
+---------------------------
+
+A Proof of Work algorithm (PoW) is how new Blocks are created or mined on the blockchain.
+The goal of PoW is to discover a number which solves a problem. The number must be difficult to 
+find but easy to verify—computationally speaking—by anyone on the network. 
+This is the core idea behind Proof of Work.
 """
 
 # Dummy blockchain structure:
