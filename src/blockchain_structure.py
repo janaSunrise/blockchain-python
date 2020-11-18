@@ -20,6 +20,10 @@ A Proof of Work algorithm (PoW) is how new Blocks are created or mined on the bl
 The goal of PoW is to discover a number which solves a problem. The number must be difficult to 
 find but easy to verify—computationally speaking—by anyone on the network. 
 This is the core idea behind Proof of Work.
+
+Let’s decide that the hash of some integer x multiplied by another y must end in 0. 
+So, `hash(x * y) = ac23dc...0` And for this simplified example, let’s fix `x = 5`. 
+Implementing this in Python:
 """
 
 # Dummy blockchain structure:
