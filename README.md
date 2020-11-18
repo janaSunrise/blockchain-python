@@ -90,6 +90,11 @@ No TODOs Planned yet.
 
 ## How to run the project?
 
-Steps to be included soon.
+- Clone the repo: `git clone https://github.com/janaSunrise/blockchain-python`
+- Install pipenv: `pip3 install pipenv`
+- Make a env with Pipenv: `pipenv sync`
+- Run the server: `pipenv run server`
+
+And Use postman to Play and Mess with the HTTP and JSON responses!
 
 Made by Sunrit Jana with ❤️
