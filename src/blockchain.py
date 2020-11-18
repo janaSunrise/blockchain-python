@@ -9,11 +9,21 @@ class Blockchain:
         """
         pass
     
-    def new_transaction(self):
+    def new_transaction(self, sender: str, recipient: str, amount: int):
         """
-        Adds a new transaction to the list of transactions.
+        Creates a new transaction to go into the next mined Block
+        :param sender: <str> Address of the Sender
+        :param recipient: <str> Address of the Recipient
+        :param amount: <int> Amount
+        :return: <int> The index of the Block that will hold this transaction
         """
-        pass
+        self.current_transactions.append(
+            {
+                'sender': sender,
+                'recipient': recipient,
+                'amount': amount,
+            }
+        )
     
     @staticmethod
     def hash(block):

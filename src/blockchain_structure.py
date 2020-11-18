@@ -1,9 +1,13 @@
 """
 The structure of a blockchain, Which is accessed like JSON or a dict.
+
+Each new block contains within itself, the hash of the previous Block. 
+This is crucial because it’s what gives blockchains immutability: 
+If an attacker corrupted an earlier Block in the chain then all subsequent blocks will 
+contain incorrect hashes.
 """
 
 # Dummy blockchain structure:
-
 block = {
     'index': 1,
     'timestamp': 1506057125.900785,
