@@ -9,7 +9,7 @@ class Blockchain:
         """
         pass
     
-    def new_transaction(self, sender: str, recipient: str, amount: int):
+    def new_transaction(self, sender: str, recipient: str, amount: int) -> int:
         """
         Creates a new transaction to go into the next mined Block
         :param sender: <str> Address of the Sender
@@ -24,6 +24,8 @@ class Blockchain:
                 'amount': amount,
             }
         )
+
+        return self.last_block['index'] + 1
     
     @staticmethod
     def hash(block):
