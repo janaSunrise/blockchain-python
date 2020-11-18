@@ -72,7 +72,7 @@ The network is able to easily verify their solution.
 
 ### Tech Stack used
 
-No external dependencies used yet.
+- `Flask`
 
 ### TODOs Planned:
 
