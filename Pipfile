@@ -10,4 +10,4 @@ requests = "*"
 [dev-packages]
 
 [scripts]
-server = "python src/app.py"
+server = "python -m src"

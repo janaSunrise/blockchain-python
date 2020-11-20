@@ -5,7 +5,6 @@ import json
 
 from time import time
 from urllib.parse import urlparse
-from uuid import uuid4
 
 
 class Blockchain:

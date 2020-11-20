@@ -1,19 +1,12 @@
 from flask import Flask, jsonify, request
 
-from configparser import ConfigParser
 from uuid import uuid4
 
-from .blockchain import Blockchain
+from src.blockchain import Blockchain
 
 
 # Initialize Flask app
 app = Flask(__name__)
-
-
-# Get the config for the Flask app
-config = ConfigParser()
-config.read('config.ini')
-
 
 # Define blockchain Variables
 blockchain = Blockchain()
@@ -112,11 +105,3 @@ def consensus():
         }
 
     return jsonify(response), 200
-
-
-if __name__ == '__main__':
-    app.run(
-        host=config.get("DEBUG", "host"),
-        port=config.getint("DEBUG", "port"),
-        debug=config.getbool("DEBUG", "debug")
-    )
