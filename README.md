@@ -93,7 +93,9 @@ No TODOs Planned yet.
 - Clone the repo: `git clone https://github.com/janaSunrise/blockchain-python`
 - Install pipenv: `pip3 install pipenv`
 - Make a env with Pipenv: `pipenv sync`
-- Run the server: `pipenv run server`
+- Run the servers:
+  - Run the miner server using `python -m frontend`
+  - Run the clients using `python -m client <PORT-HERE>`  
 
 And Use postman to Play and Mess with the HTTP and JSON responses!
 
