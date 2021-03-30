@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title>Blockchain Client</title>
+
+    <!-- Bootstrap core CSS -->
+    <link href="https://cdn.datatables.net/1.10.24/css/jquery.dataTables.min.css" rel="stylesheet">
+      <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-eOJMYsd53ii+scO/bJGFsiCZc+5NDVN2yr8+0RDqr0Ql0h+rP48ckxlpbzKgwra6" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link href="./static/css/custom.css" rel="stylesheet">
+
+  </head>
+
+  <body>
+
+    <!-- Navigation -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
+      <div class="container">
+        <a class="navbar-brand" href="#">Blockchain Client</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarResponsive">
+          <ul class="navbar-nav ml-auto">
+            <li class="nav-item active">
+              <a class="nav-link" href="/">Wallet Generator
+                <span class="sr-only">(current)</span>
+              </a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="/make/transaction">Make Transaction</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="/view/transactions">View Transactions</a>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </nav>
+
+
+
+    <div class="container">
+      <div class="row">
+        <div class="col-lg-12 text-center">
+
+
+          <div class="card-body">
+            <h4 class="card-title">Wallet Generator</h4>
+            <p class="card-text">Click on the button below to generate your blockchain wallet</p>
+            <input type="button" class="btn btn-primary btn-lg" value="Generate Wallet">
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+    <br>
+
+    <div class="container">
+
+        <div class="row">
+          <label class="col-sm-2">Public Key:</label>
+          <div class="col-sm-10">
+            <textarea id="public_key" rows="5" class="form-control" readonly></textarea>
+          </div>
+        </div>
+
+        <br>
+
+        <div class="row">
+          <label class="col-sm-2">Private Key:</label>
+          <div class="col-sm-10">
+            <textarea id="private_key" rows="5" class="form-control" readonly></textarea>
+          </div>
+        </div>
+
+        <br>
+
+        <div class="row" id="warning" style="display:none">
+          <div class="col-sm-12">
+            <div class="alert alert-danger" role="alert">
+              IMPORTANT
+              <ul>
+                <li>Save you private and public keys. These keys cannot be recovered!</li>
+                <li>Don't share your private key with anyone!</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+    </div>
+    <!-- Bootstrap core JavaScript -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/js/bootstrap.bundle.min.js" integrity="sha384-JEW9xMcG8R+pH31jmWH6WWP0WintQrMb4s7ZOdauHnUtxwoG2vI5DkLtS3qm9Ekf" crossorigin="anonymous"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script src="https://cdn.datatables.net/1.10.24/js/jquery.dataTables.min.js"></script>
+
+    <script>
+
+      $(function(){
+        $('input').click(function(){
+
+          $.ajax({
+            url: '/wallet/new',
+            type: 'GET',
+            success: function(response){
+              document.getElementById("private_key").innerHTML = response['private_key'];
+              document.getElementById("public_key").innerHTML = response['public_key'];
+              document.getElementById("warning").style.display = "block";
+            },
+            error: function(error){
+              console.log(error);
+            }
+          });
+        });
+      })
+    </script>
+  </body>
+</html>

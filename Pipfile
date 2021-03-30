@@ -6,10 +6,11 @@ name = "pypi"
 [packages]
 flask = "*"
 requests = "*"
-pycrypto = "*"
 flask-cors = "*"
+pycryptodome = "*"
 
 [dev-packages]
 
 [scripts]
-server = "python -m src"
+frontend = "python -m blockchain"
+client = "python -m client"

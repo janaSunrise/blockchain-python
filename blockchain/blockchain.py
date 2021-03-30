@@ -8,6 +8,7 @@ from uuid import uuid4
 
 import Crypto
 import Crypto.Random
+import requests
 from Crypto.Hash import SHA
 from Crypto.PublicKey import RSA
 from Crypto.Signature import PKCS1_v1_5
@@ -20,12 +21,12 @@ MINING_DIFFICULTY = 2
 class Blockchain:
     def __init__(self):
         self.chain = []
-        self.current_transactions = []
+        self.transactions = []
         self.nodes = set()
         self.node_id = str(uuid4()).replace('-', '')
         self.new_block(0, '00')
         
-    def new_block(self, proof: int, previous_hash: str) -> dict:
+    def new_block(self, nonce: int, previous_hash: str) -> dict:
         """
         Create a new Block in the Blockchain
         :param proof: <int> The proof given by the Proof of Work algorithm
@@ -36,13 +37,13 @@ class Blockchain:
         block = {
             'index': len(self.chain) + 1,
             'timestamp': time(),
-            'transactions': self.current_transactions,
-            'proof': proof,
+            'transactions': self.transactions,
+            'nonce': nonce,
             'previous_hash': previous_hash or self.hash(self.chain[-1]),
         }
 
         # Reset the current list of transactions
-        self.current_transactions = []
+        self.transactions = []
 
         self.chain.append(block)
         return block
@@ -55,7 +56,7 @@ class Blockchain:
         :param amount: <int> Amount
         :return: <int> The index of the Block that will hold this transaction
         """
-        self.current_transactions.append(
+        self.transactions.append(
             {
                 'sender': sender,
                 'recipient': recipient,
@@ -82,9 +83,9 @@ class Blockchain:
         """
         Returns the last Block in the chain.
         """
-        pass
+        return self.chain[-1]
 
-    def proof_of_work(self, last_proof: int) -> int:
+    def proof_of_work(self) -> int:
         """
         Simple Proof of Work Algorithm:
          - Find a number p' such that hash(pp') contains leading 4 zeroes, where p is the previous p'
@@ -92,25 +93,23 @@ class Blockchain:
         :param last_proof: <int>
         :return: <int>
         """
+        last_block = self.chain[-1]
+        last_hash = self.hash(last_block)
 
-        proof = 0
-        while self.valid_proof(last_proof, proof) is False:
-            proof += 1
+        nonce = 0
+        while self.valid_proof(self.transactions, last_hash, nonce) is False:
+            nonce += 1
 
-        return proof
+        return nonce
 
     @staticmethod
-    def valid_proof(last_proof: int, proof: int) -> bool:
+    def valid_proof(transactions, last_hash, nonce, difficulty=MINING_DIFFICULTY):
         """
-        Validates the Proof: Does hash(last_proof, proof) contain 4 leading zeroes?
-        :param last_proof: <int> Previous Proof
-        :param proof: <int> Current Proof
-        :return: <bool> True if correct, False if not.
+        Check if a hash value satisfies the mining conditions. This function is used within the proof_of_work function.
         """
-
-        guess = f'{last_proof}{proof}'.encode()
+        guess = (str(transactions) + str(last_hash) + str(nonce)).encode()
         guess_hash = hashlib.sha256(guess).hexdigest()
-        return guess_hash[:4] == "0000"
+        return guess_hash[:difficulty] == '0' * difficulty
 
     def register_node(self, address: str) -> None:
         """
@@ -118,9 +117,45 @@ class Blockchain:
         :param address: <str> Address of node. Eg. 'http://192.168.0.5:5000'
         :return: None
         """
-
         parsed_url = urlparse(address)
-        self.nodes.add(parsed_url.netloc)
+        if parsed_url.netloc:
+            self.nodes.add(parsed_url.netloc)
+        elif parsed_url.path:
+            # Accepts an URL without scheme like '192.168.0.5:5000'.
+            self.nodes.add(parsed_url.path)
+        else:
+            raise ValueError('Invalid URL')
+
+    @staticmethod
+    def verify_transaction_signature(sender_address, signature, transaction):
+        """
+        Check that the provided signature corresponds to transaction
+        signed by the public key (sender_address)
+        """
+        public_key = RSA.importKey(binascii.unhexlify(sender_address))
+        verifier = PKCS1_v1_5.new(public_key)
+
+        hash = SHA.new(str(transaction).encode('utf8'))
+        return verifier.verify(hash, binascii.unhexlify(signature))
+
+    def submit_transaction(self, sender_address, recipient_address, value, signature):
+        """Add a transaction to transactions array if the signature verified"""
+        transaction = OrderedDict({
+            'sender_address': sender_address,
+            'recipient_address': recipient_address,
+            'value': value
+        })
+
+        if sender_address == MINING_SENDER:
+            self.transactions.append(transaction)
+            return len(self.chain) + 1
+        else:
+            transaction_verification = self.verify_transaction_signature(sender_address, signature, transaction)
+            if transaction_verification:
+                self.transactions.append(transaction)
+                return len(self.chain) + 1
+            else:
+                return False
 
     def valid_chain(self, chain: list) -> bool:
         """
@@ -128,21 +163,21 @@ class Blockchain:
         :param chain: <list> A blockchain
         :return: <bool> True if valid, False if not
         """
-
         last_block = chain[0]
         current_index = 1
 
         while current_index < len(chain):
             block = chain[current_index]
-            print(f'{last_block}')
-            print(f'{block}')
-            print("\n-----------\n")
-            # Check that the hash of the block is correct
+
             if block['previous_hash'] != self.hash(last_block):
                 return False
 
-            # Check that the Proof of Work is correct
-            if not self.valid_proof(last_block['proof'], block['proof']):
+            transactions = block['transactions'][:-1]
+            transaction_elements = ['sender_address', 'recipient_address', 'value']
+            transactions = [OrderedDict((k, transaction[k]) for k in transaction_elements) for transaction in
+                            transactions]
+
+            if not self.valid_proof(transactions, block['previous_hash'], block['nonce'], MINING_DIFFICULTY):
                 return False
 
             last_block = block
