@@ -1,10 +1,20 @@
-import requests
-
+import binascii
 import hashlib
 import json
-
+from collections import OrderedDict
 from time import time
 from urllib.parse import urlparse
+from uuid import uuid4
+
+import Crypto
+import Crypto.Random
+from Crypto.Hash import SHA
+from Crypto.PublicKey import RSA
+from Crypto.Signature import PKCS1_v1_5
+
+MINING_SENDER = "THE BLOCKCHAIN"
+MINING_REWARD = 1
+MINING_DIFFICULTY = 2
 
 
 class Blockchain:
@@ -12,6 +22,8 @@ class Blockchain:
         self.chain = []
         self.current_transactions = []
         self.nodes = set()
+        self.node_id = str(uuid4()).replace('-', '')
+        self.new_block(0, '00')
         
     def new_block(self, proof: int, previous_hash: str) -> dict:
         """
