@@ -1,25 +1,8 @@
-<!DOCTYPE html>
-<html lang="en">
+{% extends "base.html" %}
 
-  <head>
+{% block title %}Blockchain Frontend{% endblock %}
 
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <meta name="description" content="">
-    <meta name="author" content="">
-
-    <title>Blockchain Frontend</title>
-
-    <!-- Bootstrap core CSS -->
-      <link href="https://cdn.datatables.net/1.10.24/css/jquery.dataTables.min.css" rel="stylesheet">
-      <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-eOJMYsd53ii+scO/bJGFsiCZc+5NDVN2yr8+0RDqr0Ql0h+rP48ckxlpbzKgwra6" crossorigin="anonymous">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-    <link href="./static/css/custom.css" rel="stylesheet">
-
-  </head>
-
-  <body>
-
+{% block content %}
     <!-- Navigation -->
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
       <div class="container">
@@ -94,43 +77,39 @@
       </table>
     </div>
 
-    <!-- Bootstrap core JavaScript -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/js/bootstrap.bundle.min.js" integrity="sha384-JEW9xMcG8R+pH31jmWH6WWP0WintQrMb4s7ZOdauHnUtxwoG2vI5DkLtS3qm9Ekf" crossorigin="anonymous"></script>
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
-    <script src="https://cdn.datatables.net/1.10.24/js/jquery.dataTables.min.js"></script>
-    <script src="https://cdn.datatables.net/plug-ins/1.10.24/dataRender/ellipsis.js"></script>
+{% endblock %}
 
+{% block script %}
     <script>
       $(function(){
-
         $.ajax({
           url: "/transactions/get",
           type: 'GET',
           success: function(response){
+              let transactions = [];
+              let count = 1;
 
-              //Generate Transactions Table
-              var transactions = [];
-              count = 1;
+              for (let i = 0; i < response['transactions'].length; i++) {
+                let transaction = [
+                  count,
+                  response['transactions'][i]["recipient_address"],
+                  response['transactions'][i]["sender_address"],
+                  response['transactions'][i]["value"]
+                ];
 
-              for (i = 0; i < response['transactions'].length; i++) {
+                transactions.push(transaction);
 
-                transaction = [count,
-                              response['transactions'][i]["recipient_address"],
-                              response['transactions'][i]["sender_address"],
-                              response['transactions'][i]["value"]];
+                count += 1;
+              }
 
-                  transactions.push(transaction);
-
-                  count += 1;
-              };
-
-            // Restrict a column to 10 characters, do split words
               $('#unmined_transactions_table').dataTable( {
                 data: transactions,
-                columns: [{ title: "#" },
-                          { title: "Recipient Address"},
-                          { title: "Sender Address"},
-                          { title: "Value"}],
+                columns: [
+                  { title: "#" },
+                  { title: "Recipient Address"},
+                  { title: "Sender Address"},
+                  { title: "Value"}
+                ],
                 columnDefs: [ {targets: [1,2,3], render: $.fn.dataTable.render.ellipsis( 25 )}]
               } );
 
@@ -140,45 +119,48 @@
           }
         });
 
-
-
         $.ajax({
           url: "/chain",
           type: 'GET',
           success: function(response){
 
-            var transactions = [];
-            count = 1;
+            let transactions = [];
+            let count = 1;
 
-            for (i = 1; i < response.length; i++) {
-              for (j = 0; j < response["chain"][i]["transactions"].length; j++) {
+            for (let i = 1; i < response.length; i++) {
+              for (let j = 0; j < response["chain"][i]["transactions"].length; j++) {
 
-                //format date
-                var options = {  year: "numeric", month: "short",  day: "numeric", hour: "2-digit", minute: "2-digit", second: "2-digit"  };
-                var date = new Date(response["chain"][i]["timestamp"] * 1000);
-                var formattedDateTime = date.toLocaleTimeString("en-us", options);
+                let options = {
+                  year: "numeric", month: "short",  day: "numeric", hour: "2-digit",
+                  minute: "2-digit", second: "2-digit"
+                };
+                let date = new Date(response["chain"][i]["timestamp"] * 1000);
+                let formattedDateTime = date.toLocaleTimeString("en-us", options);
 
-                transaction = [count,
-                              response["chain"][i]["transactions"][j]["recipient_address"],
-                              response["chain"][i]["transactions"][j]["sender_address"],
-                              response["chain"][i]["transactions"][j]["value"],
-                              formattedDateTime,
-                              response["chain"][i]["block_number"]];
+                let transaction = [
+                  count,
+                  response["chain"][i]["transactions"][j]["recipient_address"],
+                  response["chain"][i]["transactions"][j]["sender_address"],
+                  response["chain"][i]["transactions"][j]["value"],
+                  formattedDateTime,
+                  response["chain"][i]["block_number"]
+                ];
                 transactions.push(transaction);
 
                 count += 1;
-              };
-            };
+              }
+            }
 
-            // Restrict a column to 10 characters, do split words
               $('#transactions_table').dataTable( {
                 data: transactions,
-                columns: [{ title: "#" },
-                          { title: "Recipient Address"},
-                          { title: "Sender Address"},
-                          { title: "Value"},
-                          { title: "Timestamp"},
-                          { title: "Block"}],
+                columns: [
+                  { title: "#" },
+                  { title: "Recipient Address"},
+                  { title: "Sender Address"},
+                  { title: "Value"},
+                  { title: "Timestamp"},
+                  { title: "Block"}
+                ],
                 columnDefs: [ {targets: [1,2,3,4,5], render: $.fn.dataTable.render.ellipsis( 25 )}]
               } );
           },
@@ -221,5 +203,4 @@
       })
 
     </script>
-  </body>
-</html>
+{% endblock %}
