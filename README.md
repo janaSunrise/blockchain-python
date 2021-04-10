@@ -2,6 +2,9 @@
 
 This is a implementation of a basic blockchain structure in python, with all the description, and documentation of it's working and things.
 
+**NOTE**: It used to be a basic interaction API for finding the hashs, POW and the info. Currently it's revamped into a full 
+stack website with dummy payments  mining and a better UI.
+
 ## Definition, and Representation of Blockchain
 
 The structure of a dummy blockchain, which is accessed like JSON or a dict.
