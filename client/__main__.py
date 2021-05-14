@@ -5,10 +5,10 @@ from .app import app
 
 # Get the config for the Flask app
 config = ConfigParser()
-config.read('config.ini')
+config.read("config.ini")
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     if len(sys.argv) != 2:
         print("Usage: pipenv run client <PORT>")
 

@@ -23,9 +23,9 @@ class Blockchain:
         self.chain = []
         self.transactions = []
         self.nodes = set()
-        self.node_id = str(uuid4()).replace('-', '')
-        self.new_block(0, '00')
-        
+        self.node_id = str(uuid4()).replace("-", "")
+        self.new_block(0, "00")
+
     def new_block(self, nonce: int, previous_hash: str) -> dict:
         """
         Create a new Block in the Blockchain
@@ -35,11 +35,11 @@ class Blockchain:
         """
 
         block = {
-            'index': len(self.chain) + 1,
-            'timestamp': time(),
-            'transactions': self.transactions,
-            'nonce': nonce,
-            'previous_hash': previous_hash or self.hash(self.chain[-1]),
+            "index": len(self.chain) + 1,
+            "timestamp": time(),
+            "transactions": self.transactions,
+            "nonce": nonce,
+            "previous_hash": previous_hash or self.hash(self.chain[-1]),
         }
 
         # Reset the current list of transactions
@@ -47,7 +47,7 @@ class Blockchain:
 
         self.chain.append(block)
         return block
-    
+
     def new_transaction(self, sender: str, recipient: str, amount: int) -> int:
         """
         Creates a new transaction to go into the next mined Block
@@ -57,15 +57,11 @@ class Blockchain:
         :return: <int> The index of the Block that will hold this transaction
         """
         self.transactions.append(
-            {
-                'sender': sender,
-                'recipient': recipient,
-                'amount': amount,
-            }
+            {"sender": sender, "recipient": recipient, "amount": amount,}
         )
 
-        return self.last_block['index'] + 1
-    
+        return self.last_block["index"] + 1
+
     @staticmethod
     def hash(block: dict) -> str:
         """
@@ -109,7 +105,7 @@ class Blockchain:
         """
         guess = (str(transactions) + str(last_hash) + str(nonce)).encode()
         guess_hash = hashlib.sha256(guess).hexdigest()
-        return guess_hash[:difficulty] == '0' * difficulty
+        return guess_hash[:difficulty] == "0" * difficulty
 
     def register_node(self, address: str) -> None:
         """
@@ -124,7 +120,7 @@ class Blockchain:
             # Accepts an URL without scheme like '192.168.0.5:5000'.
             self.nodes.add(parsed_url.path)
         else:
-            raise ValueError('Invalid URL')
+            raise ValueError("Invalid URL")
 
     @staticmethod
     def verify_transaction_signature(sender_address, signature, transaction):
@@ -135,22 +131,26 @@ class Blockchain:
         public_key = RSA.importKey(binascii.unhexlify(sender_address))
         verifier = PKCS1_v1_5.new(public_key)
 
-        hash = SHA.new(str(transaction).encode('utf8'))
+        hash = SHA.new(str(transaction).encode("utf8"))
         return verifier.verify(hash, binascii.unhexlify(signature))
 
     def submit_transaction(self, sender_address, recipient_address, value, signature):
         """Add a transaction to transactions array if the signature verified"""
-        transaction = OrderedDict({
-            'sender_address': sender_address,
-            'recipient_address': recipient_address,
-            'value': value
-        })
+        transaction = OrderedDict(
+            {
+                "sender_address": sender_address,
+                "recipient_address": recipient_address,
+                "value": value,
+            }
+        )
 
         if sender_address == MINING_SENDER:
             self.transactions.append(transaction)
             return len(self.chain) + 1
         else:
-            transaction_verification = self.verify_transaction_signature(sender_address, signature, transaction)
+            transaction_verification = self.verify_transaction_signature(
+                sender_address, signature, transaction
+            )
             if transaction_verification:
                 self.transactions.append(transaction)
                 return len(self.chain) + 1
@@ -169,15 +169,19 @@ class Blockchain:
         while current_index < len(chain):
             block = chain[current_index]
 
-            if block['previous_hash'] != self.hash(last_block):
+            if block["previous_hash"] != self.hash(last_block):
                 return False
 
-            transactions = block['transactions'][:-1]
-            transaction_elements = ['sender_address', 'recipient_address', 'value']
-            transactions = [OrderedDict((k, transaction[k]) for k in transaction_elements) for transaction in
-                            transactions]
+            transactions = block["transactions"][:-1]
+            transaction_elements = ["sender_address", "recipient_address", "value"]
+            transactions = [
+                OrderedDict((k, transaction[k]) for k in transaction_elements)
+                for transaction in transactions
+            ]
 
-            if not self.valid_proof(transactions, block['previous_hash'], block['nonce'], MINING_DIFFICULTY):
+            if not self.valid_proof(
+                transactions, block["previous_hash"], block["nonce"], MINING_DIFFICULTY
+            ):
                 return False
 
             last_block = block
@@ -200,11 +204,11 @@ class Blockchain:
 
         # Grab and verify the chains from all the nodes in our network
         for node in neighbours:
-            response = requests.get(f'http://{node}/chain')
+            response = requests.get(f"http://{node}/chain")
 
             if response.status_code == 200:
-                length = response.json()['length']
-                chain = response.json()['chain']
+                length = response.json()["length"]
+                chain = response.json()["chain"]
 
                 # Check if the length is longer and the chain is valid
                 if length > max_length and self.valid_chain(chain):
