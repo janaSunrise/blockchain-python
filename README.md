@@ -95,7 +95,7 @@ No TODOs Planned yet.
 - Make a env with Pipenv: `pipenv sync`
 - Run the servers:
   - Run the miner server using `python -m frontend`
-  - Run the clients using `python -m client <PORT-HERE>`  
+  - Run the clients using `python -m client <PORT-HERE>`
 
 And Use postman to Play and Mess with the HTTP and JSON responses!
 
