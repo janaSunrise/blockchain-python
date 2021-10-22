@@ -2,8 +2,8 @@
 
 This is a implementation of a basic blockchain structure in python, with all the description, and documentation of it's working and things.
 
-**NOTE**: It used to be a basic interaction API for finding the hashs, POW and the info. Currently it's revamped into a full 
-stack website with dummy payments  mining and a better UI.
+**NOTE**: It used to be a basic interaction API for finding the hashs, POW and the info. Currently it's revamped into a full
+stack website with dummy payments mining and a better UI.
 
 ## Definition, and Representation of Blockchain
 
@@ -25,26 +25,26 @@ block = {
 }
 ```
 
-Each new block contains within itself, the hash of the previous Block. 
-This is crucial because it’s what gives blockchains immutability: 
-If an attacker corrupted an earlier Block in the chain then all subsequent blocks will 
+Each new block contains within itself, the hash of the previous Block.
+This is crucial because it’s what gives blockchains immutability:
+If an attacker corrupted an earlier Block in the chain then all subsequent blocks will
 contain incorrect hashes.
 
 ### Creating new Blocks
 
-When our Blockchain is instantiated we’ll need to seed it with a genesis block—a block with 
-no predecessors. We’ll also need to add a “proof” to our genesis block which is the result of 
+When our Blockchain is instantiated we’ll need to seed it with a genesis block—a block with
+no predecessors. We’ll also need to add a “proof” to our genesis block which is the result of
 mining (or proof of work).
 
 ### Understanding Proof of Work
 
 A Proof of Work algorithm (PoW) is how new Blocks are created or mined on the blockchain.
-The goal of PoW is to discover a number which solves a problem. The number must be difficult to 
-find but easy to verify—computationally speaking—by anyone on the network. 
+The goal of PoW is to discover a number which solves a problem. The number must be difficult to
+find but easy to verify—computationally speaking—by anyone on the network.
 This is the core idea behind Proof of Work.
 
-Let’s decide that the hash of some integer x multiplied by another y must end in 0. 
-So, `hash(x * y) = ac23dc...0` And for this simplified example, let’s fix `x = 5`. 
+Let’s decide that the hash of some integer x multiplied by another y must end in 0.
+So, `hash(x * y) = ac23dc...0` And for this simplified example, let’s fix `x = 5`.
 Implementing this in Python:
 
 ```python
@@ -63,22 +63,22 @@ hash(5 * 21) = 1253e9373e...5e3600155e860
 ```
 
 In Bitcoin, the Proof of Work algorithm is called **Hashcash**.
-And it’s not too different from our basic example above. 
-It’s the algorithm that miners race to solve in order to create a new block. 
-In general, the difficulty is determined by the number of characters searched for in a string. 
+And it’s not too different from our basic example above.
+It’s the algorithm that miners race to solve in order to create a new block.
+In general, the difficulty is determined by the number of characters searched for in a string.
 The miners are then rewarded for their solution by receiving a coin—in a transaction.
 
 The network is able to easily verify their solution.
 
 This is what the request for a transaction will look like. It’s what the user sends to the server:
+
 ```json
 {
- "sender": "my address",
- "recipient": "someone else's address",
- "amount": 5
+  "sender": "my address",
+  "recipient": "someone else's address",
+  "amount": 5
 }
 ```
-
 
 ## More Project Info
 
