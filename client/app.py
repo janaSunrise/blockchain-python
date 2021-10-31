@@ -14,17 +14,17 @@ app = Flask(__name__)
 
 @app.route("/")
 def index():
-    return render_template("./index.html")
+    return render_template("index.html")
 
 
 @app.route("/make/transaction")
 def make_transaction():
-    return render_template("./make_transaction.html")
+    return render_template("make_transaction.html")
 
 
 @app.route("/view/transactions")
 def view_transaction():
-    return render_template("./view_transactions.html")
+    return render_template("view_transactions.html")
 
 
 @app.route("/wallet/new", methods=["GET"])

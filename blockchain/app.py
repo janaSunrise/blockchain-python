@@ -17,12 +17,12 @@ node_identifier = str(uuid4()).replace("-", "")
 
 @app.route("/")
 def index():
-    return render_template("./index.html")
+    return render_template("index.html")
 
 
 @app.route("/configure")
 def configure():
-    return render_template("./configure.html")
+    return render_template("configure.html")
 
 
 @app.route("/transactions/new", methods=["POST"])
