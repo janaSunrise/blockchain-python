@@ -7,7 +7,7 @@ from urllib.parse import urlparse
 from uuid import uuid4
 
 import Crypto
-import Crypto.Random
+import Crypto.Random  # noqa: F401
 import requests
 from Crypto.Hash import SHA
 from Crypto.PublicKey import RSA
@@ -57,7 +57,7 @@ class Blockchain:
         :return: <int> The index of the Block that will hold this transaction
         """
         self.transactions.append(
-            {"sender": sender, "recipient": recipient, "amount": amount,}
+            {"sender": sender, "recipient": recipient, "amount": amount}
         )
 
         return self.last_block["index"] + 1

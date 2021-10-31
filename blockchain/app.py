@@ -40,7 +40,7 @@ def new_transaction():
         values["signature"],
     )
 
-    if transaction_result == False:
+    if not transaction_result:
         response = {"message": "Invalid Transaction!"}
         return jsonify(response), 406
     else:
