@@ -1,14 +1,29 @@
+# Python cache
 __pycache__/
 
-venv/
-env/
-
+# Editor generated files
 .idea/
 .vscode/
 .spyproject/
 
-*.lock
+# VirtualENV files
+env/
+venv/
+.venv/
+
+# Environmental and personal files
+*.env
+TODO
+
+# Database files
 *.sqlite3
 *.sqlite
+*.sql
+*.db
 
-.env/
+# Ignore personal log files
+logs/
+
+# MacOS generated file
+.DS_STORE
+
