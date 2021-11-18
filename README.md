@@ -8,7 +8,7 @@ it's revamped into a full stack website with dummy payments mining and a better 
 
 ## Definition, and Representation of Blockchain
 
-The structure of a dummy blockchain, which is accessed like JSON or a dict.
+Here is the representation of a transaction in blockchain in Python.
 
 ```python
 block = {
